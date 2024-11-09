@@ -4,7 +4,7 @@
   "description": "temp",
   "version": "1.0",
   "action": {
-    "default_popup": "Summerize.html",
+    "default_popup": "index.html",
     "default_icon": "Dummy.jfif"
   }
 }
