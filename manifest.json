@@ -5,6 +5,6 @@
   "version": "1.0",
   "action": {
     "default_popup": "Summerize.html",
-    "default_icon": "Dummy.png"
+    "default_icon": "Dummy.jfif"
   }
 }
