@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Extension for Dummies",
+  "description": "temp",
+  "version": "1.0",
+  "action": {
+    "default_popup": "Summerize.html",
+    "default_icon": "Dummy.png"
+  }
+}
