@@ -4,13 +4,12 @@
   "description": "Summarizes each paragraph and displays a block of text next to it.",
   "version": "1.0",
   "permissions": [
-    "tabs", 
-    "activeTab",
+    "scripting",
+    "storage",
     "scripting"
   ],
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -18,7 +17,18 @@
         "<all_urls>"
       ],
       "js": [
+        "summary-popup.js",
         "content.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "summary-popup.css"
+      ],
+      "matches": [
+        "<all_urls>"
       ]
     }
   ],

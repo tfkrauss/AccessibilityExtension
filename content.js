@@ -1,13 +1,17 @@
 // content.js
 
 console.log("Content script loaded on page:", window.location.href);
+const link = document.createElement('link');
+link.rel = 'stylesheet';
+link.href = chrome.runtime.getURL('./summary-popup.css');
+document.head.appendChild(link);
 let currentAudio = null
-// Function to send selected text to the background script
+summaryPopup = new SummaryPopup();
+//TTS portion
 function read(text) {
     // Send the selected text to the background script
     chrome.runtime.sendMessage({ message: "selectedText", text: text });
 }
-
 // Listen for messages from the background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.audioData) {
@@ -34,12 +38,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 //Hover effect for black border box
-function addHoverEffect(){
+function addHoverEffect() {
     const divs = document.querySelectorAll('p, div, h1, h2, h3, h4, h5, h6')
 
     //Add hover effect on all divs
-    divs.forEach(div => {    
-        
+    divs.forEach(div => {
+
         /*
         // CHECK FOR INVALID NONTEXTUAL DIVS
         */
@@ -57,7 +61,7 @@ function addHoverEffect(){
         ) {
             return; // Skip this element
         }
-        
+
 
         /*
         //OUTLINE ON HOVER EVENTS
@@ -80,7 +84,7 @@ function addHoverEffect(){
         // Helper function to determine brightness
         function isDarkBackground(color) {
             if (!color) return false;
-        
+
             const rgb = color.match(/\d+/g);
             if (rgb) {
                 const [r, g, b] = rgb.map(Number);
@@ -89,7 +93,7 @@ function addHoverEffect(){
             }
             return false;
         }
-        
+
         // Determine the border color based on the background color
         const bgColor = getEffectiveBackgroundColor(div);
         const borderColor = isDarkBackground(bgColor) ? 'white' : 'black';
@@ -100,7 +104,7 @@ function addHoverEffect(){
             div.style.outline = `2px solid ${borderColor}`;
             //div.style.cursor = "pointer";
         })
-        
+
         div.addEventListener("mouseout", () => {
             div.style.outline = origOutline;
             div.style.cursor = origCursor;
@@ -113,16 +117,12 @@ function addHoverEffect(){
         // Check for selected text on mouseup
         div.addEventListener("mouseup", () => {
             const selectedText = window.getSelection().toString().trim();
-            if (selectedText) {
-                // Call function to summarize selected text
-                summarizeText(selectedText);
-                read(selectedText);
-            } else {
-                const text = div.textContent;
-                console.log(text);
-                read(text);
-            }
-            
+            summaryPopup.show(100, 100);
+            if (!selectedText) {
+                selectedText = div.textContent
+            }    
+            summarizeText(selectedText);
+            read(selectedText);
         });
     })
 }
@@ -134,4 +134,3 @@ function summarizeText(text) {
 
 
 addHoverEffect();
-
