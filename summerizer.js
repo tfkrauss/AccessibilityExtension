@@ -1,7 +1,4 @@
-const axios = require('axios');
-require('dotenv').config(); 
-
-const apiKey = process.env.OPENAI_API_KEY;  
+const apiKey = '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';  
 const API_URL = "https://api.openai.com/v1/chat/completions"; // OpenAI API endpoint for chat-based models
 
 async function generateSummaryAndExplanation(text) {

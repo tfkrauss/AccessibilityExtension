@@ -17,15 +17,20 @@
         "<all_urls>"
       ],
       "js": [
-        "summary-popup.js",
-        "content.js"
-      ]
+          "summary-popup.js",
+          "content.js",
+          "chatbox.js"
+        ],
+        "css": [
+          "chatbox.css"
+        ]
     }
   ],
   "web_accessible_resources": [
     {
       "resources": [
-        "summary-popup.css"
+        "summary-popup.css",
+        "chatbox.css"
       ],
       "matches": [
         "<all_urls>"
