@@ -1,34 +1,55 @@
 .summary-popup {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-
-.summary-popup {
-    position: fixed;
     top: 200px;
     right: 200px;
     background-color: #ffffff;
     border: 1px solid #ccc;
+    border-radius: 10px;
     padding: 10px;
+    margin: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: none;
-    /* Hidden by default */
-    z-index: 1000000000;
-    border-radius: 5px;
-    width: 200px;
-    height: 200px;
+    z-index: 1000000;
+    width: 400px;
+    height: 300px;
 }
 
-.summary-popup button {
-    margin-top: 5px;
-    display: block;
-    background-color: #f44336;
-    color: white;
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.popup-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.easy-button {
+    background-color: #00FF00;
+    /* Green */
+}
+
+.mid-button {
+    background-color: #FFA500;
+    /* Orange */
+}
+
+.hard-button {
+    background-color: #0000FF;
+    /* Blue */
+}
+
+.close-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
     border: none;
+    color: red;
+    font-size: 18px;
     cursor: pointer;
-    padding: 5px;
-    border-radius: 3px;
 }
