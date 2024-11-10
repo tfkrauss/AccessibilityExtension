@@ -119,23 +119,22 @@ function addHoverEffect() {
         //TEXT SELECTION ON MOUSEUP EVENT & CLICK EVENT
         */
         // Check for selected text on mouseup
-        div.addEventListener("mouseup", (e) => {
+        div.addEventListener("mouseup", async (e) => {
             let selectedText = window.getSelection().toString().trim();
             if (!selectedText) {
                 selectedText = div.textContent;
             }
-
-            // Get the bounding rectangle of the element
+        
             const rect = div.getBoundingClientRect();
-            // Calculate position for the popup
             let x = rect.right + window.scrollX + 10;
             let y = rect.top + window.scrollY;
-            // Adjust position if the popup goes off-screen
+        
             if (x + summaryPopup.popup.offsetWidth > window.innerWidth) {
                 x = rect.left + window.scrollX - summaryPopup.popup.offsetWidth - 10;
             }
+        
             summaryPopup.show(x, y);
-            summaryPopup.updateContent(selectedText, read(selectedText));
+            await summaryPopup.updateContent(selectedText);
         });
     })
 }
@@ -145,7 +144,6 @@ function summarizeText(text) {
     // Send the text to the background script to get the summary
     // chrome.runtime.sendMessage({ action: 'summarizeText', text: text });
 }
-
 
 
 addHoverEffect();

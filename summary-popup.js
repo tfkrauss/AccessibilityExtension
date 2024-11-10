@@ -13,7 +13,7 @@ class SummaryPopup {
 
         this.closeButton = document.createElement('button');
         this.closeButton.className = 'summary-popup-close';
-        this.closeButton.textContent = '×'; // Close icon
+        this.closeButton.textContent = '×';
 
         this.closeButton.addEventListener('click', () => {
             this.hide();
@@ -39,14 +39,13 @@ class SummaryPopup {
             this.toggleAudio();
         });
 
-        // Append the audio button to the audio container
         this.audioContainer.appendChild(this.audioButton);
 
         // Initialize the audio element
         this.audio = new Audio();
         this.isPlaying = false;
 
-        // Append elements to the popup
+        // Append all elements to the popup
         this.popup.appendChild(this.titleBar);
         this.popup.appendChild(this.summaryText);
         this.popup.appendChild(this.audioContainer);
@@ -59,14 +58,12 @@ class SummaryPopup {
     }
 
     show(x, y) {
-        // Position the popup and make it visible
         this.popup.style.left = x + 'px';
         this.popup.style.top = y + 'px';
-        this.popup.style.display = 'flex'; // Changed to 'flex' for flex-direction
+        this.popup.style.display = 'flex';
     }
 
     hide() {
-        // Hide the popup and reset audio
         this.popup.style.display = 'none';
         if (this.isPlaying) {
             this.audio.pause();
@@ -75,24 +72,46 @@ class SummaryPopup {
         }
     }
 
-    updateContent(summaryText, audioData) {
-        // Update the summary text
-        if (summaryText !== null) {
-            this.summaryText.textContent = summaryText;
-        }
+    async updateContent(selectedText) {
+        this.summaryText.textContent = "Loading summary...";
 
-        // Update the audio source
-        if (audioData) {
-            this.audio.src = audioData;
-            this.audioButton.disabled = false;
-        } else {
-            this.audio.src = '';
-            this.audioButton.disabled = true;
+        try {
+            const response = await new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage(
+                    { action: 'generateSummary', text: selectedText },
+                    (response) => {
+                        if (chrome.runtime.lastError) {
+                            reject(new Error(chrome.runtime.lastError.message));
+                            return;
+                        }
+                        resolve(response);
+                    }
+                );
+            });
+
+            if (!response) {
+                throw new Error('No response from the background script');
+            }
+
+            if (!response.success) {
+                throw new Error(response.error || 'Failed to generate summary');
+            }
+
+            this.summaryText.textContent = response.summary;
+            
+            // Trigger text-to-speech with the summary
+            chrome.runtime.sendMessage({ 
+                message: "selectedText", 
+                text: response.summary 
+            });
+
+        } catch (error) {
+            console.error('Summary generation error:', error);
+            this.summaryText.textContent = "Error: " + error.message;
         }
     }
 
     toggleAudio() {
-        // Play or pause the audio
         if (this.isPlaying) {
             this.audio.pause();
             this.isPlaying = false;
