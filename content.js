@@ -98,12 +98,14 @@ function addHoverEffect() {
 
         // Determine the border color based on the background color
         const bgColor = getEffectiveBackgroundColor(div);
-        const borderColor = isDarkBackground(bgColor) ? 'white' : 'black';
+        const borderColor = isDarkBackground(bgColor) ? 'white' : 'rgb(200, 200, 200)';
         const origCursor = div.style.cursor;
         const origOutline = div.style.outline;
 
         div.addEventListener("mouseover", () => {
-            div.style.outline = `2px solid ${borderColor}`;
+            div.style.outline = `1.5px solid ${borderColor}`;
+            div.style.borderRadius = "5px";
+            div.style.outlineOffset = "2px";
             //div.style.cursor = "pointer";
         })
 
