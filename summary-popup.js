@@ -33,17 +33,13 @@ class SummaryPopup {
         // Create the audio play/pause button
         this.audioButton = document.createElement('button');
         this.audioButton.className = 'summary-popup-audio-button';
-        this.audioButton.textContent = 'Play';
+        this.audioButton.textContent = 'Play';  // Initial state is 'Play'
 
         this.audioButton.addEventListener('click', () => {
             this.toggleAudio();
         });
 
         this.audioContainer.appendChild(this.audioButton);
-
-        // Initialize the audio element
-        this.audio = new Audio();
-        this.isPlaying = false;
 
         // Append all elements to the popup
         this.popup.appendChild(this.titleBar);
@@ -65,11 +61,6 @@ class SummaryPopup {
 
     hide() {
         this.popup.style.display = 'none';
-        if (this.isPlaying) {
-            this.audio.pause();
-            this.isPlaying = false;
-            this.audioButton.textContent = 'Play';
-        }
     }
 
     async updateContent(selectedText) {
@@ -98,28 +89,38 @@ class SummaryPopup {
             }
 
             this.summaryText.textContent = response.summary;
-            
-            // Trigger text-to-speech with the summary
+
+            // Trigger text-to-speech with the summary (Send to background for audio generation)
             chrome.runtime.sendMessage({ 
                 message: "selectedText", 
                 text: response.summary 
             });
-
         } catch (error) {
             console.error('Summary generation error:', error);
             this.summaryText.textContent = "Error: " + error.message;
         }
     }
 
+    // Toggle audio play/pause
     toggleAudio() {
-        if (this.isPlaying) {
-            this.audio.pause();
-            this.isPlaying = false;
-            this.audioButton.textContent = 'Play';
+        if (currentAudio) {
+            if (currentAudio.paused) {
+                // If audio is paused, play it
+                currentAudio.play()
+                    .then(() => {
+                        console.log("Audio playback started.");
+                        this.audioButton.textContent = 'Pause';  // Change to Pause when playing
+                    })
+                    .catch((error) => {
+                        console.error("Error playing audio:", error);
+                    });
+            } else {
+                // If audio is playing, pause it
+                currentAudio.pause();
+                this.audioButton.textContent = 'Play';  // Change to Play when paused
+            }
         } else {
-            this.audio.play();
-            this.isPlaying = true;
-            this.audioButton.textContent = 'Pause';
+            console.log("No audio available to play.");
         }
     }
 }

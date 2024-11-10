@@ -90,6 +90,7 @@ async function generateSpeechFromText(text, tabId) {
       const audioBlob = await response.blob();
       const base64Audio = await blobToBase64(audioBlob);
       
+      // Send audio data to content script
       chrome.tabs.sendMessage(tabId, { audioData: base64Audio });
   } catch (error) {
       console.error("Error generating speech:", error);
