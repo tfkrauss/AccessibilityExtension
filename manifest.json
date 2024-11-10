@@ -4,7 +4,8 @@
   "description": "Summarizes each paragraph and displays a block of text next to it.",
   "version": "1.0",
   "permissions": [
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "background": {
     "service_worker": "background.js"
