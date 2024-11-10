@@ -17,13 +17,13 @@
         "<all_urls>"
       ],
       "js": [
-          "summary-popup.js",
-          "content.js",
-          "chatbox.js"
-        ],
-        "css": [
-          "chatbox.css"
-        ]
+        "summary-popup.js",
+        "content.js",
+        "chatbox.js"
+      ],
+      "css": [
+        "chatbox.css"
+      ]
     }
   ],
   "web_accessible_resources": [
@@ -40,8 +40,17 @@
   "host_permissions": [
     "<all_urls>"
   ],
+  "icons": {
+    "16": "icons/icon_16.png",
+    "48": "icons/icon_48.png",
+    "128": "icons/icon_128.png"
+  },
   "action": {
     "default_popup": "index.html",
-    "default_icon": "Dummy.jfif"
+    "default_icon": {
+      "16": "icons/icon_16.png",
+      "48": "icons/icon_48.png",
+      "128": "icons/icon_128.png"
+    }
   }
 }
