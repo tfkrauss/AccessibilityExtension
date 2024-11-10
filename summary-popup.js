@@ -1,75 +1,106 @@
-
 class SummaryPopup {
     constructor() {
-        this.element = this.createPopupElement();
-        const block = document.createElement('div');
-        document.body.appendChild(block);
-        block.classList.add('summary-block');
-        block.appendChild(this.element);
-    }
+        // Create the popup container
+        this.popup = document.createElement('div');
+        this.popup.className = 'summary-popup';
 
-    createPopupElement() {
-        const content = document.createElement('div');
-        content.classList.add('summary-popup');
+        // Create the title bar with 'Summary' text and a close button
+        this.titleBar = document.createElement('div');
+        this.titleBar.className = 'summary-popup-title';
 
-        const buttonBox = document.createElement('div');
-        buttonBox.classList.add('button-container');
-        content.appendChild(buttonBox);
+        this.titleText = document.createElement('span');
+        this.titleText.textContent = 'Summary';
 
-        // Creating color-coded buttons
-        const easyButton = document.createElement('div');
-        easyButton.classList.add('popup-button', 'easy-button');
-        buttonBox.appendChild(easyButton);
+        this.closeButton = document.createElement('button');
+        this.closeButton.className = 'summary-popup-close';
+        this.closeButton.textContent = '×'; // Close icon
 
-        const midButton = document.createElement('div');
-        midButton.classList.add('popup-button', 'mid-button');
-        buttonBox.appendChild(midButton);
-
-        const hardButton = document.createElement('div');
-        hardButton.classList.add('popup-button', 'hard-button');
-        buttonBox.appendChild(hardButton);
-
-        const summaryBox = document.createElement('div');
-        content.appendChild(summaryBox);
-        const title = document.createElement('h5');
-        title.textContent = "Summary";
-        summaryBox.appendChild(title);
-
-        const summaryText = document.createElement('p');
-        summaryText.textContent = "Placeholder summary text goes here.";
-        summaryBox.appendChild(summaryText);
-
-        // Add a close button
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'X';
-        closeButton.classList.add('close-button');
-        closeButton.addEventListener('click', () => {
+        this.closeButton.addEventListener('click', () => {
             this.hide();
         });
-        content.appendChild(closeButton);
 
-        return content;
+        this.titleBar.appendChild(this.titleText);
+        this.titleBar.appendChild(this.closeButton);
+
+        // Create the summary text area
+        this.summaryText = document.createElement('div');
+        this.summaryText.className = 'summary-popup-text';
+
+        // Create the audio controls container
+        this.audioContainer = document.createElement('div');
+        this.audioContainer.className = 'summary-popup-audio-container';
+
+        // Create the audio play/pause button
+        this.audioButton = document.createElement('button');
+        this.audioButton.className = 'summary-popup-audio-button';
+        this.audioButton.textContent = 'Play';
+
+        this.audioButton.addEventListener('click', () => {
+            this.toggleAudio();
+        });
+
+        // Append the audio button to the audio container
+        this.audioContainer.appendChild(this.audioButton);
+
+        // Initialize the audio element
+        this.audio = new Audio();
+        this.isPlaying = false;
+
+        // Append elements to the popup
+        this.popup.appendChild(this.titleBar);
+        this.popup.appendChild(this.summaryText);
+        this.popup.appendChild(this.audioContainer);
+
+        // Add the popup to the document body
+        document.body.appendChild(this.popup);
+
+        // Initially hide the popup
+        this.hide();
     }
 
     show(x, y) {
-        this.element.style.left = `${x}px`;
-        this.element.style.top = `${y}px`;
-        this.element.style.display = 'flex'; // Show the popup
+        // Position the popup and make it visible
+        this.popup.style.left = x + 'px';
+        this.popup.style.top = y + 'px';
+        this.popup.style.display = 'flex'; // Changed to 'flex' for flex-direction
     }
 
     hide() {
-        this.element.style.display = 'none';
+        // Hide the popup and reset audio
+        this.popup.style.display = 'none';
+        if (this.isPlaying) {
+            this.audio.pause();
+            this.isPlaying = false;
+            this.audioButton.textContent = 'Play';
+        }
+    }
+
+    updateContent(summaryText, audioData) {
+        // Update the summary text
+        if (summaryText !== null) {
+            this.summaryText.textContent = summaryText;
+        }
+
+        // Update the audio source
+        if (audioData) {
+            this.audio.src = audioData;
+            this.audioButton.disabled = false;
+        } else {
+            this.audio.src = '';
+            this.audioButton.disabled = true;
+        }
+    }
+
+    toggleAudio() {
+        // Play or pause the audio
+        if (this.isPlaying) {
+            this.audio.pause();
+            this.isPlaying = false;
+            this.audioButton.textContent = 'Play';
+        } else {
+            this.audio.play();
+            this.isPlaying = true;
+            this.audioButton.textContent = 'Pause';
+        }
     }
 }
-
-
-// Example usage:
-// Assuming you have an event listener that triggers the summary popup
-
-// document.querySelectorAll('p').forEach(paragraph => {
-//     paragraph.addEventListener('click', (event) => {
-//         const summaryText = 'This is a sample summary for the paragraph. Click close to dismiss.';
-//         const popup = new SummaryPopup();
-//         popup.show(summaryText, event.pageX, event.pageY);
-//     });
-// });

@@ -1,17 +1,18 @@
-// content.js
-
-console.log("Content script loaded on page:", window.location.href);
+// Link css to html
 const link = document.createElement('link');
 link.rel = 'stylesheet';
 link.href = chrome.runtime.getURL('./summary-popup.css');
 document.head.appendChild(link);
+
 let currentAudio = null
 summaryPopup = new SummaryPopup();
+
 //TTS portion
 function read(text) {
     // Send the selected text to the background script
     chrome.runtime.sendMessage({ message: "selectedText", text: text });
 }
+
 // Listen for messages from the background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.audioData) {
@@ -57,7 +58,8 @@ function addHoverEffect() {
             !hasOnlyInlineChildren ||
             div.tagName === 'A' ||     // Is a link
             div.tagName === 'BUTTON' || // Is a button
-            div.hasAttribute('onclick') // Has onclick event
+            div.hasAttribute('onclick') || // Has onclick event
+            div.textContent.length < 100  // Less than a sentence
         ) {
             return; // Skip this element
         }
@@ -115,20 +117,31 @@ function addHoverEffect() {
         //TEXT SELECTION ON MOUSEUP EVENT & CLICK EVENT
         */
         // Check for selected text on mouseup
-        div.addEventListener("mouseup", () => {
+        div.addEventListener("mouseup", (e) => {
             let selectedText = window.getSelection().toString().trim();
-            summaryPopup.show(100, 100);
             if (!selectedText) {
                 selectedText = div.textContent;
-            }    
-            summarizeText(selectedText);
-            read(selectedText);
+            }
+
+            // Get the bounding rectangle of the element
+            const rect = div.getBoundingClientRect();
+            // Calculate position for the popup
+            let x = rect.right + window.scrollX + 10;
+            let y = rect.top + window.scrollY;
+            // Adjust position if the popup goes off-screen
+            if (x + summaryPopup.popup.offsetWidth > window.innerWidth) {
+                x = rect.left + window.scrollX - summaryPopup.popup.offsetWidth - 10;
+            }
+            summaryPopup.show(x, y);
+            summaryPopup.updateContent(selectedText, read(selectedText));
         });
     })
 }
 
 function summarizeText(text) {
     console.log(text);
+    // Send the text to the background script to get the summary
+    // chrome.runtime.sendMessage({ action: 'summarizeText', text: text });
 }
 
 
