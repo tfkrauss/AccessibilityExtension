@@ -32,7 +32,7 @@ async function generateSummaryAndExplanation(text) {
 
         if (response.data && response.data.choices && response.data.choices[0].message.content) {
             const summary = response.data.choices[0].message.content;
-            console.log(summary);
+            return summary;
         } else {
             console.log("No response generated.");
         }
@@ -40,14 +40,3 @@ async function generateSummaryAndExplanation(text) {
         console.error("Error:", error.response ? error.response.data : error.message);
     }
 }
-
-const content = `
-    Although pore size distribution provides insight into the porous structure of polymers, the bottlenecks or 
-    pore gates between interconnected micropores are the key structural feature that determine ion transport rate
-     and selectivity (Fig. 1a). However, pore gate sizes are difficult to characterize using standard experimental
-      techniques, whereas in molecular simulations, random segmental motions of polymer chains create transient pores
-       that deviate from static models27. 
-`;
-
-// Call the function with example content
-generateSummaryAndExplanation(content);

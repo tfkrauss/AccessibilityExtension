@@ -15,6 +15,18 @@
     overflow: hidden;
   }
   
+  .close-chatbox {
+    background: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .chatbox-header {
     background-color: #0078d4;
     color: white;

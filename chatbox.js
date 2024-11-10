@@ -5,9 +5,8 @@ function createChatboxHTML() {
       const chatboxHTML = `
         <div class="chatbox-container">
           <div class="chatbox-header">
-            <span>Chat with GPT</span>
+            <span>Chat with AI</span>
             <div class="header-controls">
-              <button class="minimize-chatbox">-</button>
               <button class="close-chatbox">×</button>
             </div>
           </div>
@@ -106,7 +105,7 @@ function createChatboxHTML() {
     if (!existingButton) {
       const chatButton = document.createElement('button');
       chatButton.className = 'chat-button';
-      chatButton.textContent = 'Chat with GPT';
+      chatButton.textContent = 'Chat with AI';
       chatButton.style.position = 'fixed';
       chatButton.style.bottom = '20px';
       chatButton.style.right = '20px';
