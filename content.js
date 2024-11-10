@@ -1,5 +1,11 @@
-console.log("Content script loaded on page:", window.location.href);
+const link = document.createElement('link');
+link.rel = 'stylesheet';
+link.href = chrome.runtime.getURL('./summary-popup.css');
+document.head.appendChild(link);
 
+summaryPopup = new SummaryPopup();
+
+addHoverEffect();
 //Hover effect for black border box
 function addHoverEffect() {
     const divs = document.querySelectorAll('p, div, h1, h2, h3, h4, h5, h6')
@@ -22,8 +28,6 @@ function addHoverEffect() {
         ) {
             return; // Skip this element
         }
-
-
 
         //OUTLINE ON HOVER EVENTS
 
@@ -61,7 +65,8 @@ function addHoverEffect() {
 
         const origOutline = div.style.outline;
         div.addEventListener("mouseover", () => {
-            div.style.outline = `2px solid ${borderColor}`;
+            div.style.outline = `1.5px solid ${borderColor}`;
+            div.style.borderRadius = `7px`;
             div.style.cursor = "pointer";
         })
 
@@ -69,30 +74,11 @@ function addHoverEffect() {
             div.style.outline = origOutline;
         })
 
-
-
         //CLICK EVENTS
         div.addEventListener("click", () => {
+            summaryPopup.show(100, 100);
             const text = div.textContent;
             console.log(text);
         })
     })
 }
-
-
-
-addHoverEffect();
-import SummaryPopup from "./summary-popup.js";
-const link = document.createElement('link');
-link.rel = 'stylesheet';
-link.href = chrome.runtime.getURL('styles.css');
-document.head.appendChild(link);
-
-const summaryPopup = new SummaryPopup();
-
-const allParagraphs = document.querySelectorAll("p");
-allParagraphs.forEach(function (elem) {
-    elem.addEventListener("click", function () {
-        summaryPopup.appendToParent(elem)
-    });
-})

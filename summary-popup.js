@@ -1,11 +1,31 @@
-export default class SummaryPopup {
+class SummaryPopup {
     constructor() {
-        this.popupElement = this.createPopupElement();
+        this.element = this.createPopupElement();
+        const block = document.createElement('div');
+        document.body.appendChild(block);
+        block.classList.add('summary-block');
+        block.appendChild(this.element);
     }
 
     createPopupElement() {
-        const popup = document.createElement('div');
-        popup.classList.add('summary-popup');
+        const content = document.createElement('div');
+        content.classList.add('summary-popup');
+
+        const buttonBox = document.createElement('div');
+        content.appendChild(buttonBox);
+        const easyButton = document.createElement('button');
+        buttonBox.appendChild(easyButton);
+        const midButton = document.createElement('button');
+        buttonBox.appendChild(midButton);
+        const hardButton = document.createElement('button');
+        buttonBox.appendChild(hardButton);
+
+        const summaryBox = document.createElement('div');
+        content.appendChild(summaryBox);
+        const title = document.createElement('h3');
+        summaryBox.appendChild(title);
+        const summaryText = document.createElement('p');
+        summaryBox.appendChild(summaryText);
 
         // Add a close button
         const closeButton = document.createElement('button');
@@ -13,33 +33,19 @@ export default class SummaryPopup {
         closeButton.addEventListener('click', () => {
             this.hide();
         });
-        popup.appendChild(closeButton);
+        content.appendChild(closeButton);
 
-        return popup;
+        return content;
     }
 
-    appendToParent(parent) {
-        parent.appendChild(this.popupElement);
+    show(x, y) {
+        this.element.style.left = `${x}px`;
+        this.element.style.top = `${y}px`;
+        this.element.style.display = 'block'; // Show the popup
     }
-
-    // show(content, x, y) {
-    //     this.popupElement.innerHTML = ''; // Clear previous content
-    //     this.popupElement.textContent = content; // Set new content
-    //     this.popupElement.style.left = `${x}px`;
-    //     this.popupElement.style.top = `${y}px`;
-    //     this.popupElement.style.display = 'block'; // Show the popup
-
-    //     // Append the close button again (if needed)
-    //     const closeButton = document.createElement('button');
-    //     closeButton.textContent = 'Close';
-    //     closeButton.addEventListener('click', () => {
-    //         this.hide();
-    //     });
-    //     this.popupElement.appendChild(closeButton);
-    // }
 
     hide() {
-        this.popupElement.style.display = 'none';
+        this.element.style.display = 'none';
     }
 }
 

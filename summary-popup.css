@@ -1,14 +1,25 @@
 .summary-popup {
-    position: absolute;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.summary-popup {
+    position: fixed;
+    top: 200px;
+    right: 200px;
     background-color: #ffffff;
     border: 1px solid #ccc;
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: none;
     /* Hidden by default */
-    z-index: 1000;
+    z-index: 1000000000;
     border-radius: 5px;
     width: 200px;
+    height: 200px;
 }
 
 .summary-popup button {
