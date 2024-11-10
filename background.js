@@ -7,7 +7,7 @@ async function generateSpeechFromText(text, tabId) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + apiKey // Replace with your OpenAI API Key
+        'Authorization': 'Bearer ' + apiKey
       },
       body: JSON.stringify({
         model: "tts-1",
@@ -39,12 +39,7 @@ async function generateSpeechFromText(text, tabId) {
 
 // Listen for messages from the content script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.message === "contentScriptLoaded") {
-    console.log("Content script reported as loaded.");
-    // Now we can proceed to generate the speech and send it to the content script.
-    const sampleText = `
-      This is a sample text block for testing. This will allow us to check if the audio is generated correctly and can be played in the content script.
-    `;
-    generateSpeechFromText(sampleText, sender.tab.id);
+  if (request.message === "selectedText") {
+    generateSpeechFromText(request.text, sender.tab.id);
   }
 });
