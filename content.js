@@ -1,10 +1,42 @@
+// content.js
+
 console.log("Content script loaded on page:", window.location.href);
 const link = document.createElement('link');
 link.rel = 'stylesheet';
 link.href = chrome.runtime.getURL('./summary-popup.css');
 document.head.appendChild(link);
-
+let currentAudio = null
 summaryPopup = new SummaryPopup();
+//TTS portion
+function read(text) {
+    // Send the selected text to the background script
+    chrome.runtime.sendMessage({ message: "selectedText", text: text });
+}
+// Listen for messages from the background script
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.audioData) {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            currentAudio = null;
+        }
+        const audioData = `data:audio/mp3;base64,${message.audioData}`;
+        currentAudio = new Audio(audioData);
+
+        currentAudio.addEventListener('ended', () => {
+            currentAudio = null;
+        });
+        currentAudio.play()
+            .then(() => {
+                console.log("Audio playback started.");
+            })
+            .catch((error) => {
+                console.error("Error playing audio:", error);
+            });
+        console.log("Attempted to play audio from background message.");
+    }
+});
+
 //Hover effect for black border box
 function addHoverEffect() {
     const divs = document.querySelectorAll('p, div, h1, h2, h3, h4, h5, h6')
@@ -84,15 +116,13 @@ function addHoverEffect() {
         */
         // Check for selected text on mouseup
         div.addEventListener("mouseup", () => {
-            const selectedText = window.getSelection().toString().trim();
+            let selectedText = window.getSelection().toString().trim();
             summaryPopup.show(100, 100);
-            if (selectedText) {
-                // Call function to summarize selected text
-                summarizeText(selectedText);
-            } else {
-                const text = div.textContent;
-                console.log(text);
-            }
+            if (!selectedText) {
+                selectedText = div.textContent;
+            }    
+            summarizeText(selectedText);
+            read(selectedText);
         });
     })
 }
