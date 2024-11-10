@@ -116,10 +116,10 @@ function addHoverEffect() {
         */
         // Check for selected text on mouseup
         div.addEventListener("mouseup", () => {
-            const selectedText = window.getSelection().toString().trim();
+            let selectedText = window.getSelection().toString().trim();
             summaryPopup.show(100, 100);
             if (!selectedText) {
-                selectedText = div.textContent
+                selectedText = div.textContent;
             }    
             summarizeText(selectedText);
             read(selectedText);
