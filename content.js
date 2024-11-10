@@ -28,28 +28,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             })
             .catch((error) => {
                 console.error("Error playing audio:", error);
-                if (error.name === 'NotAllowedError') {
-                    // Create a play button if autoplay is blocked
-                    const playButton = document.createElement('button');
-                    playButton.textContent = 'Play Audio';
-                    playButton.style.position = 'fixed';
-                    playButton.style.bottom = '10px';
-                    playButton.style.right = '10px';
-                    playButton.style.zIndex = '9999';
-
-                    playButton.addEventListener('click', () => {
-                        audio.play()
-                            .then(() => {
-                                console.log("Audio playback started after user interaction.");
-                            })
-                            .catch((error) => {
-                                console.error("Error playing audio after user interaction:", error);
-                            });
-                    });
-
-                    document.body.appendChild(playButton);
-                    console.log("Play button added to the page.");
-                }
             });
         console.log("Attempted to play audio from background message.");
     }
