@@ -1,7 +1,7 @@
 
 
 async function generateSpeechFromText(text, tabId) {
-  const apiKey = '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'; // Replace with your actual API key
+  const apiKey = ''; // Replace with your actual API key
   try {
     const response = await fetch("https://api.openai.com/v1/audio/speech", {
       method: "POST",
